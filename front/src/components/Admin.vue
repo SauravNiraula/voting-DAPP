@@ -1,5 +1,7 @@
 <template>
-  <div class="admin-main">
+<div>
+  <Header title="Admin Dashboard" />
+  <div class="admin-main flex flex-col body-container px-20 justify-center">
     <div class="add-candidates">
       <h2 class="text-green-700 text-2xl">
         Add candidate
@@ -53,9 +55,11 @@
       </table>
     </div>
   </div>
+  </div>
 </template>
 
 <script setup>
+  import Header from "@/components/Header.vue";
   import { notify } from "@kyvg/vue3-notification";
   import {ref, onMounted} from "vue";
 
@@ -92,7 +96,7 @@
   async function remove_candidate() {
     const account = await get_account();
     state.contract.methods.remove_candidate(candidate_id.value).send({from: account})
-    .on('receipt', (receipt) => {
+    .then((receipt) => {
       notify({
         title: 'Success',
         text : 'Candidate removed successfully',
@@ -100,14 +104,13 @@
       setTimeout(() => {
         window.location.reload();
       }, 1000);
-    }).on('error', (error) => {
+    })
+    .catch((error) => {
       notify({
         title: 'Error',
         text : error.message,
       });
-    }).then(() => {
-      candidate_id.value = '';
-    });
+    })
   }
 
   async function candidate_inserted() {

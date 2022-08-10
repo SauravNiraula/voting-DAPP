@@ -58,6 +58,7 @@ contract Voting {
     }
 
     function remove_candidate(uint256 c_id) public {
+        require(msg.sender == admin, "Only admin can remove candidates");
         if(c_id < candidate_count) {
             for (uint256 i = c_id; i < candidate_count - 1; i++) {
                 candidates[i] = candidates[i+1];

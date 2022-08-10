@@ -1,13 +1,17 @@
 <template>
-<div class="app-main container">
+<div class="app-main container relative">
 
   <!-- notifications -->
   <notifications position="top right" classes="bg-green-700 text-white p-5 rounded"/>
 
-  <Header /> 
-  <div class="app-body body-container flex justify-center items-center">
+  <!-- <Header />  -->
+  <div class="app-body">
     <router-view>
     </router-view> 
+  </div>
+
+  <div class="absolute text-green-700 bottom-5 right-1">
+    Developed by - Nischal Regmi
   </div>
 </div>
 </template>

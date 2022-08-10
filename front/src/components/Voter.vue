@@ -1,11 +1,14 @@
 <template>
-  <div class="voter-main">
+  <div>
+  <Header title="Choose your candidate wisely !" />
+  
+  <div class="voter-main  flex flex-col body-container px-20 justify-center">
     <div v-if="!has_vid" class="vote mt-5">
       <h2 class="text-green-700 text-2xl flex items-center mb-2">
-        Add citizenship ID 
+        Add Voter ID
       </h2>
       <div class="flex gap-2 mt-2">
-        <input v-model="v_id" class="border-2 border-green-700 rounded p-2" placeholder="Citizenship ID" type="text">
+        <input v-model="v_id" class="border-2 border-green-700 rounded p-2" placeholder="Voter ID" type="text">
       </div>
       <button @click="add_voter_id" class="mt-2 bg-green-700 text-white p-3 rounded">Add</button>
     </div>
@@ -44,9 +47,11 @@
     </div>
     <div v-else class="text-xl text-green-700 mt-5">Your vote has been submitted</div>
   </div>
+  </div>
 </template>
 
 <script setup>
+  import Header from "@/components/Header.vue";
   import { notify } from "@kyvg/vue3-notification";
   import {ref, onMounted} from "vue";
   import {state} from "@/store";
@@ -82,7 +87,7 @@
       state.contract.methods.initialize_voter(v_id.value).send({from: account})
       .then(res => {
         has_vid.value = true;
-        notify("Added Citizenship ID");
+        notify("Added Voter ID");
       })
       .catch(err => {
         notify(err.message);

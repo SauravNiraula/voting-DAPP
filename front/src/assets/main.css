@@ -24,10 +24,12 @@ th,td {
 .container {
   width: min(100%, 1200px);
   margin: 0 auto;
+  padding-bottom: 20px;
 }
 
 .body-container {
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 160px);
+  /* min-height: 100vh; */
 } 
 
 /* .notification_class {
