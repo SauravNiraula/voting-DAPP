@@ -50,6 +50,7 @@
   import { notify } from "@kyvg/vue3-notification";
   import {ref, onMounted} from "vue";
   import {state} from "@/store";
+  import { get_account } from "@/extras";
 
   const all_candidates = ref([]);
   const v_id = ref("");
@@ -57,9 +58,10 @@
   const has_vid = ref(false);
   const vote_num = ref("");
 
-  function vote() {
+  async function vote() {
+    const account = await get_account();
     if(vote_num.value != "") {
-      state.contract.methods.vote(vote_num.value).send({from: state.account})
+      state.contract.methods.vote(vote_num.value).send({from: account})
       .then(res => {
         has_voted.value = true;
         notify("Successfully voted");
@@ -74,9 +76,10 @@
     else notify("Enter Candidate S.N.")
   }
 
-  function add_voter_id() {
+  async function add_voter_id() {
     if(v_id.value != "") {
-      state.contract.methods.initialize_voter(v_id.value).send({from: state.account})
+      const account = await get_account();
+      state.contract.methods.initialize_voter(v_id.value).send({from: account})
       .then(res => {
         has_vid.value = true;
         notify("Added Citizenship ID");
@@ -88,8 +91,9 @@
     else notify("Enter Id")
   }
 
-  function check_if_vid() {
-    state.contract.methods.has_vid().call({from: state.account})
+  async function check_if_vid() {
+    const account = await get_account();
+    state.contract.methods.has_vid().call({from: account})
     .then(res => {
       has_vid.value = res;
     })
@@ -101,8 +105,9 @@
     });
   }
 
-  function check_if_voted() {
-    state.contract.methods.has_voted().call({from: state.account})
+  async function check_if_voted() {
+    const account = await get_account();
+    state.contract.methods.has_voted().call({from: account})
     .then(res => {
       has_voted.value = res;
     })
@@ -114,11 +119,12 @@
     });
   }
 
-  function get_all_candidates() {
-    state.contract.methods.candidate_count().call({from: state.account})
+  async function get_all_candidates() {
+    const account = await get_account();
+    state.contract.methods.candidate_count().call({from: account})
     .then(res => {
       for (let i = 0; i < res; i++) {
-        state.contract.methods.get_candidate(i).call({from: state.account})
+        state.contract.methods.get_candidate(i).call({from: account})
         .then(res => {
           all_candidates.value.push({id: i, name: res[0], party: res[1], votes: res[2]});
         })

@@ -21,11 +21,21 @@
 
   import { state } from "@/store";
 
-  onMounted(async() => {
+  onMounted(() => {
     if (typeof window.ethereum !== 'undefined') {
       console.log('MetaMask is installed!');
-      // state.account = await window.ethereum.request({ method: 'eth_requestAccounts' })[0];
-      // console.log(accounts);
+    //   // state.account = await window.ethereum.request({ method: 'eth_requestAccounts' })[0];
+    //   // const user_addr = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    //   // state.account = user_addr[0];
+    //   // while(state.account == null) {}
+    //   // console.log(state.account);
+    //   window.ethereum.request({method: 'eth_requestAccounts'})
+    //   .then(res => {
+    //     state.account = res[0];
+    //   })
+    //   .catch(err => {
+    //     notify("Cannot load account!");
+    //   })
 
       const web3 = new Web3("http://localhost:7545");
 

@@ -60,6 +60,7 @@
   import {ref, onMounted} from "vue";
 
   import {state} from "@/store";
+  import {get_account} from "@/extras";
 
   const name = ref('');
   const party = ref('');
@@ -68,27 +69,29 @@
 
   const all_candidates = ref([]);
 
-  function change_admin() {
-    // if(new_admin.value != "") {
-    //   state.contract.methods.change_admin(new_admin.value).send({from: state.account})
-    //   .then(res => {
-    //     notify({
-    //       title: 'Success',
-    //       text: 'Admin changed successfully'
-    //     });
-    //   })
-    //   .catch(err => {
-    //     notify({
-    //       title: 'Error',
-    //       text: err.message
-    //     });
-    //   })
-    // }
-    // else notify("Enter address");
+  async function change_admin() {
+    if(new_admin.value != "") {
+      const account = await get_account();
+      state.contract.methods.change_admin(new_admin.value).send({from: account})
+      .then(res => {
+        notify({
+          title: 'Success',
+          text: 'Admin changed successfully'
+        });
+      })
+      .catch(err => {
+        notify({
+          title: 'Error',
+          text: err.message
+        });
+      })
+    }
+    else notify("Enter address");
   }
 
-  function remove_candidate() {
-    state.contract.methods.remove_candidate(candidate_id.value).send({from: state.account})
+  async function remove_candidate() {
+    const account = await get_account();
+    state.contract.methods.remove_candidate(candidate_id.value).send({from: account})
     .on('receipt', (receipt) => {
       notify({
         title: 'Success',
@@ -107,14 +110,15 @@
     });
   }
 
-  function candidate_inserted() {
+  async function candidate_inserted() {
     if(name.value == '' || party.value == '') {
       notify({
         title : 'Error!',
         text : 'Please fill all the fields'
       });
     } else {
-      state.contract.methods.insert_candidate(name.value, party.value).send({from: state.admin, gas: 3000000})
+      const account = await get_account();
+      state.contract.methods.insert_candidate(name.value, party.value).send({from: account, gas: 3000000})
       .then(res => {
         notify("Candidate inserted successfully");
         setTimeout(() => {
@@ -131,11 +135,12 @@
     }
   }
 
-  function get_all_candidates() {
-    state.contract.methods.candidate_count().call({from: state.account})
+  async function get_all_candidates() {
+    const account = await get_account();
+    state.contract.methods.candidate_count().call({from: account})
     .then(res => {
       for (let i = 0; i < res; i++) {
-        state.contract.methods.get_candidate(i).call({from: state.account})
+        state.contract.methods.get_candidate(i).call({from: account})
         .then(res => {
           all_candidates.value.push({id: i, name: res[0], party: res[1], votes: res[2]});
         })
