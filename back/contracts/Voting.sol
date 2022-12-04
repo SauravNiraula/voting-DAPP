@@ -16,11 +16,12 @@ contract Voting {
     address public admin;
 
     uint256 public candidate_count;
-    // Candidate[] candidates;
+
     event voted(address voted_by, string candidate_name);
 
     mapping(address => Voter) public voters;
     mapping(uint256 => Candidate) candidates;
+    mapping(uint256 => bool) voter_ids;
 
     constructor() {
         admin = msg.sender;
@@ -69,7 +70,9 @@ contract Voting {
 
     function initialize_voter(uint256 c_id) public {
         Voter storage vote_sender = voters[msg.sender];
+        require(!voter_ids[c_id], "This Citizenship id is already used"); 
         require(vote_sender.voter_id == 0, "Citizenship id already initialized");
+        voter_ids[c_id] = true;
         vote_sender.voter_id = c_id;
     }
 
